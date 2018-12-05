@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -64,7 +65,12 @@ public class Ebay
 		driver.findElement(By.xpath("//*[@text='sign in']")).click();
 		
 		//search for an item
-		driver.findElement(By.xpath("//*[@text='Search for anything']")).sendKeys("christmas sale");
+		driver.findElement(By.xpath("//*[@text='Search for anything']")).click();
+		driver.findElement(By.xpath("//*[@resource-id='com.ebay.mobile:id/search_src_text']")).sendKeys("christmas sale");
+		WebElement e = driver.findElement(By.xpath("//*[@resource-id='com.ebay.mobile:id/text']"));
+		TouchAction t = new TouchAction(driver);
+		t.tap(e).perform();
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
 		//scroll up for a required element
 		int w = driver.manage().window().getSize().getWidth();
@@ -80,7 +86,7 @@ public class Ebay
 				driver.findElement(By.xpath("//*[@text='Christmas Sale - Tiffany Red Butterfly Accent Stained Glass Table Lamp']")).click();
 				break;
 			}
-			catch(Exception e)
+			catch(Exception ex)
 			{
 				ta.press(x,y).moveTo(0,temp-y).release().perform();
 			}
@@ -97,14 +103,17 @@ public class Ebay
 			driver.rotate(ScreenOrientation.PORTRAIT);
 		}
 		
+		driver.rotate(ScreenOrientation.PORTRAIT);
 		//Add to cart
 		driver.findElement(By.xpath("//*[@text='Add to cart']")).click();
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		driver.findElement(By.xpath("//*[@text='View in cart']")).click();
 		
 		//purchasing the item
 		driver.findElement(By.xpath("//*[@text='Checkout']")).click();
 		driver.findElement(By.xpath("//*[@text='Select payment option']")).click();
-		driver.findElement(By.xpath("//*[@contect-desc='PayPal' or @contect-desc='Credit or debit card' or @contect-desc='Bank deposit']")).click();
+		//driver.findElement(By.xpath("//*[@contect-desc='PayPal' or @contect-desc='Credit or debit card' or @contect-desc='Bank deposit']")).click();
+		driver.findElement(By.xpath("//*[@contect-desc='Bank deposit']")).click();
 		driver.findElement(By.xpath("//*[@text='Commit to buy']")).click();	
 		
 		//close app
